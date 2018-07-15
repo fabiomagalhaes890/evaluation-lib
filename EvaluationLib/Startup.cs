@@ -19,7 +19,8 @@ namespace EvaluationLib
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<BookContext>(opt =>
-                opt.UseSqlServer("Data Source=localhost; Initial Catalog=EVAL_LIB_HBSIS; User id=sysdba; Password=masterkey"));// UseInMemoryDatabase("EvalLib"));
+                opt.UseSqlServer(Configuration["ConnectionString"]));
+            
             services.AddMvc();
         }
 
@@ -29,8 +30,7 @@ namespace EvaluationLib
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+
             app.UseMvc();
         }
     }
