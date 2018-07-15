@@ -1,5 +1,4 @@
-﻿using EvaluationLib.DTO;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EvaluationLib.Models

@@ -1,6 +1,4 @@
-﻿using EvaluationLib.DTO;
-using EvaluationLib.Models;
-using System;
+﻿using EvaluationLib.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,11 +11,6 @@ namespace EvaluationLib.Services
         public BookService(BookContext context)
         {
             _context = context;
-            if (_context.Books.Count() == 0)
-            {
-                _context.Books.Add(new Book { Name = "Livro 1", RegistrationDate = DateTime.Now });
-                _context.SaveChanges();
-            }
         }
 
         public void CreateBook(Book book)
@@ -26,13 +19,12 @@ namespace EvaluationLib.Services
             _context.SaveChanges();
         }
 
-        public void UpdateBook(int id, Book item)
+        public Book UpdateBook(int id, Book item)
         {
-
             var book = _context.Books.Find(id);
             if (book == null)
             {
-                return; // NotFound();
+                return null;
             }
 
             book.RegistrationDate = item.RegistrationDate;
@@ -40,25 +32,25 @@ namespace EvaluationLib.Services
 
             _context.Books.Update(book);
             _context.SaveChanges();
-            //return NoContent();
+            return book;
         }
 
-        public void DeleteBook(int id)
+        public string DeleteBook(int id)
         {
             var book = _context.Books.Find(id);
             if (book == null)
             {
-                return; //NotFound();
+                return "Livro não encontrado";
             }
 
             _context.Books.Remove(book);
             _context.SaveChanges();
-            //return NoContent();
+            return "Livro excluído";
         }
 
         public List<Book> GetAllBooks()
         {
-            return _context.Books.ToList();
+            return _context.Books.OrderBy(b => b.Name).ToList();
         }
 
         public Book GetBookById(int id)

@@ -1,8 +1,6 @@
-﻿using EvaluationLib.DTO;
-using EvaluationLib.Models;
+﻿using EvaluationLib.Models;
 using EvaluationLib.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace EvaluationLib.Controllers
 {
@@ -17,15 +15,19 @@ namespace EvaluationLib.Controllers
         }
 
         [HttpGet(Name = "GetAllBooks")]
-        public List<Book> GetAll()
+        public IActionResult GetAll()
         {
-            return _service.GetAllBooks();
+            return Ok(_service.GetAllBooks());
         }
 
         [HttpGet("{id}", Name = "GetBook")]
-        public Book GetById(int id)
+        public IActionResult GetById(int id)
         {
-            return _service.GetBookById(id);
+            var book = _service.GetBookById(id);
+            if (book == null)
+                return NotFound();
+
+            return Ok(book);
         }
 
         [HttpPost]
@@ -38,14 +40,21 @@ namespace EvaluationLib.Controllers
         [HttpPut("{id}", Name = "UpdateBook")]
         public IActionResult UpdateBook(int id, [FromBody] Book book)
         {
-            _service.UpdateBook(id, book);
+            var bookUpdated = _service.UpdateBook(id, book);
+            if (bookUpdated == null)
+                return NotFound();
+
             return CreatedAtRoute("GetBook", new { id = book.Id }, book);
         }
 
         [HttpDelete("{id}", Name = "DeleteBook")]
-        public void DeleteBookById(int id)
+        public IActionResult DeleteBookById(int id)
         {
-            _service.DeleteBook(id);
+            var bookDeleted = _service.DeleteBook(id);
+            if (bookDeleted == null)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }
